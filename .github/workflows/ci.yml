@@ -1,0 +1,35 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ Install SSH client (needed for GitHub runners)
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client rsync
+
+      # 3️⃣ Add SSH key from GitHub Secrets
+      - name: Start SSH Agent
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+
+      # 4️⃣ Copy files to DigitalOcean droplet
+      - name: Copy project to server
+        run: |
+          rsync -avz --exclude='.git*' ./ ${{ secrets.DO_USER }}@${{ secrets.DO_SERVER_IP }}:/home/${{ secrets.DO_USER }}/my-python-app
+
+      # 5️⃣ Connect via SSH and run docker-compose
+      - name: Run Docker Compose on DigitalOcean
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_SERVER_IP }} \
+          "cd /home/${{ secrets.DO_USER }}/my-python-app && docker compose down && docker compose up -d --build"
