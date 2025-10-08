@@ -30,7 +30,7 @@ jobs:
       # 4️⃣ Copy files to DigitalOcean droplet
       - name: Copy project to server
         run: |
-          rsync -avz --exclude='.git*' ./ ${{ secrets.DO_USER }}@${{ secrets.DO_SERVER_IP }}:/home/${{ secrets.DO_USER }}/my-python-app
+          rsync -avz --exclude='.git*' ./ ${{ secrets.DO_USER }}@${{ secrets.DO_SERVER_IP }}:/root/home/${{ secrets.DO_USER }}/my-python-app
 
       # 5️⃣ Connect via SSH and run docker-compose
       - name: Run Docker Compose on DigitalOcean
