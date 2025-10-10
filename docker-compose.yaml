@@ -1,6 +1,6 @@
 version: "3.8"
 services:
   web:
-    build: .
+    image: ghcr.io/ilhame90/my-python-app:latest
     ports:
       - "5001:5001"
