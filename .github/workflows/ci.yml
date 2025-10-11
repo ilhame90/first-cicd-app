@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: my-python-app
-  REGISTRY: ghcr.io/${{ github.repository_owner }}
+  REGISTRY: ghcr.io/aggunr
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -22,15 +22,15 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: aggunr
+          password: ${{ secrets.AGGUN_TOKEN }}
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.REGISTRY }}/review_classifier:${{ env.IMAGE_TAG }}
 
   # ---------- CD: Deploy to DigitalOcean ----------
   cd:
@@ -54,7 +54,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_SERVER_IP }} "
             cd /root/home/${{ secrets.DO_USER }}/my-python-app &&
             # Update image tag in docker-compose.yml
-            sed -i 's|image:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|' docker-compose.yaml &&
+            sed -i 's|image:.*|image: ${{ env.REGISTRY }}/review_classifier:${{ env.IMAGE_TAG }}|' docker-compose.yaml &&
             docker-compose pull &&
             docker-compose down &&
             docker-compose up -d
