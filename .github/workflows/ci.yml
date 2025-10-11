@@ -30,7 +30,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/review_classifier:${{ env.IMAGE_TAG }}
+          tags: ${{ env.REGISTRY }}/review_classifing:${{ env.IMAGE_TAG }}
 
   # ---------- CD: Deploy to DigitalOcean ----------
   cd:
@@ -53,8 +53,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_SERVER_IP }} "
             cd /root/home/${{ secrets.DO_USER }}/my-python-app &&
-            # Update image tag in docker-compose.yml
-            sed -i 's|image:.*|image: ${{ env.REGISTRY }}/review_classifier:${{ env.IMAGE_TAG }}|' docker-compose.yaml &&
+            # Update image tag in docker-compose.yamlreview_classifing
+            sed -i 's|image:.*|image: ${{ env.REGISTRY }}/review_classifing:${{ env.IMAGE_TAG }}|' docker-compose.yaml &&
             docker-compose pull &&
             docker-compose down &&
             docker-compose up -d
