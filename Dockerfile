@@ -4,7 +4,7 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Copy dependencies first (for caching)
+# Copy dependencies first (for caching).
 COPY requirements.txt .
 
 # Install dependencies
