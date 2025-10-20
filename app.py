@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    x = "Hellooo from 1"
+    x = "Hellooo from 2"
     y = "Ilhama and"
     z = "Aggun"
     return " ".join(x, y, z)
